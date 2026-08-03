@@ -2,7 +2,11 @@
 <html lang="th">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<meta name="theme-color" content="#0B1E3D">
+<meta name="mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-capable" content="yes">
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
 <title>Cane Fleet · ศูนย์ปฏิบัติการขนส่งอ้อย</title>
 <link rel="preconnect" href="https://fonts.googleapis.com">
 <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
@@ -25,6 +29,7 @@ body{
   font-family:'IBM Plex Sans Thai',system-ui,sans-serif;
   background:var(--bg);color:var(--ink);
   -webkit-font-smoothing:antialiased;overflow:hidden;
+  -webkit-tap-highlight-color:transparent;text-size-adjust:100%;-webkit-text-size-adjust:100%;
 }
 .num{font-family:'Sora','IBM Plex Sans Thai',sans-serif;font-variant-numeric:tabular-nums;font-feature-settings:"tnum"}
 button{font-family:inherit;cursor:pointer;border:none;background:none;color:inherit}
@@ -151,6 +156,7 @@ button{font-family:inherit;cursor:pointer;border:none;background:none;color:inhe
 .map-wrap{position:relative;border-radius:var(--r);overflow:hidden;border:1px solid var(--line);box-shadow:var(--shadow);
   background:linear-gradient(135deg,#dfe9d4,#cfe0c4 40%,#c3d9bd)}
 .map-svg{position:absolute;inset:0;width:100%;height:100%}
+#markerG{position:absolute;inset:0;z-index:5}
 .map-marker{position:absolute;transform:translate(-50%,-50%);cursor:pointer;transition:.15s;z-index:5}
 .map-marker:hover{z-index:9;filter:drop-shadow(0 6px 12px rgba(0,0,0,.3))}
 .marker-chip{position:relative;width:38px;height:38px;border-radius:50%;display:grid;place-items:center;
@@ -339,6 +345,161 @@ tr:hover td{background:#F9FBFE}
   .map-wrap{height:520px}
   .trips{grid-template-columns:1fr}
 }
+
+/* ============================================================
+   RESPONSIVE · TABLET & MOBILE
+   ============================================================ */
+@media(max-width:900px){
+  .stat-row{grid-template-columns:repeat(2,1fr)!important}
+  .hero-kpi{grid-template-columns:1fr 1fr!important}
+  .kpi-hero{grid-column:1/-1}
+  .yard-grid{grid-template-columns:repeat(auto-fill,minmax(240px,1fr))}
+}
+
+/* ---------- MOBILE: rail becomes bottom nav ---------- */
+@media(max-width:820px){
+  #app.show{grid-template-columns:1fr;grid-template-rows:minmax(0,1fr) auto;height:100vh}
+  .main{order:1;height:auto;min-height:0}
+
+  .rail{order:2;flex-direction:row;justify-content:space-around;align-items:center;
+    padding:6px 8px;padding-bottom:calc(6px + env(safe-area-inset-bottom));gap:2px;
+    box-shadow:0 -6px 20px rgba(11,30,61,.28)}
+  .rail .logo3d,.rail .spacer{display:none}
+  .nav-btn{flex:1;width:auto;max-width:92px;height:46px;border-radius:13px;gap:2px}
+  .nav-btn span{font-size:9.5px}
+  .nav-btn svg{width:20px;height:20px}
+  .nav-btn.active::before{left:50%;top:-6px;transform:translateX(-50%);width:24px;height:3px;border-radius:0 0 4px 4px}
+  .rail-user{width:38px;height:38px;font-size:13px;flex-shrink:0;margin-left:6px}
+
+  /* topbar */
+  .topbar{height:56px;min-height:56px;padding:0 14px;gap:10px}
+  .topbar .pg-title{font-size:15.5px;line-height:1.25}
+  .topbar .pg-sub{display:none}
+  .lp-txt{display:none}
+  .live-pill{padding:8px;gap:0;border-radius:50%}
+  .clock{font-size:12.5px}
+
+  .page{padding:14px 14px 26px;overscroll-behavior:contain;-webkit-overflow-scrolling:touch}
+  .stat-row{gap:12px;margin-bottom:14px}
+
+  /* P1 — map first, then filters/lists */
+  .p1-grid{gap:12px}
+  .map-wrap{order:1;height:58vh;min-height:300px;max-height:440px}
+  .sidebar{order:2}
+  .side-body{overflow:visible;padding:12px}
+  .side-tab{font-size:12.5px;padding:10px 6px}
+  .legend{width:46%;max-width:186px;bottom:10px;left:10px;font-size:11px}
+  .leg-sec .leg-head{padding:8px 10px}
+  .leg-body{max-height:126px;overflow:auto;padding:2px 10px 9px}
+  .map-ctrl{top:10px;right:10px;gap:6px}
+  .map-ctrl button{width:38px;height:38px;border-radius:10px}
+
+  /* drill panel → bottom sheet */
+  .drill{position:fixed;left:0;right:0;bottom:0;top:auto;width:auto;max-height:78vh;
+    border-radius:20px 20px 0 0;z-index:170;animation:sheetUp .22s ease}
+  .drill-body{max-height:calc(78vh - 96px);padding-bottom:calc(16px + env(safe-area-inset-bottom))}
+
+  /* P2 */
+  .trips{gap:12px;margin-bottom:12px}
+  .idle-grid{grid-template-columns:1fr;gap:12px}
+  .alert-bar{padding:11px 12px;gap:10px;border-radius:12px}
+  .alert-bar .ai{width:34px;height:34px;border-radius:10px}
+  .panel{padding:13px}
+  .btn-dispatch,.btn-charge{padding:12px}
+
+  /* P3 */
+  .drawer{width:100%;max-width:none;height:100vh}
+  .drawer-info{padding:0 18px calc(20px + env(safe-area-inset-bottom))}
+  .ctc-box{margin:16px 18px;padding:18px}
+  .ctc-box .ctc-time{font-size:38px}
+
+  /* P4 */
+  .filter-bar{padding:12px;gap:10px;border-radius:12px}
+  .fb-item{flex-wrap:wrap;width:100%}
+  .fb-item>.seg{width:100%}
+  .fb-input{flex:1;min-width:0}
+  .filter-bar>div[style*="width:1px"]{display:none}
+  .seg button{padding:7px 11px;font-size:12px}
+  .tbl-scroll{overflow-x:auto;-webkit-overflow-scrolling:touch}
+  .tbl-scroll table{min-width:660px}
+  .tbl-head{padding:13px 14px;gap:10px}
+  th,td{padding:11px 14px}
+
+  /* modal → bottom sheet */
+  .modal-bg{padding:0;align-items:flex-end}
+  .modal{width:100%;max-width:none;border-radius:20px 20px 0 0;animation:sheetUp .22s ease}
+  .modal-body{max-height:calc(100vh - 260px);overflow:auto;padding:18px}
+  .modal-foot{padding:14px 18px;padding-bottom:calc(14px + env(safe-area-inset-bottom))}
+
+  /* 16px inputs stop iOS from auto-zooming on focus */
+  .fld input,.search input,.sel,.fb-input{font-size:16px}
+}
+@keyframes sheetUp{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+
+/* dvh where supported — avoids mobile browser toolbar clipping */
+@supports(height:100dvh){
+  @media(max-width:820px){
+    #app.show{height:100dvh}
+    .drawer{height:100dvh}
+    .drill{max-height:78dvh}
+    .drill-body{max-height:calc(78dvh - 96px)}
+    .modal-body{max-height:calc(100dvh - 260px)}
+  }
+}
+
+/* ---------- SMALL PHONES ---------- */
+@media(max-width:480px){
+  .page{padding:12px 12px 22px}
+  .stat-row{gap:10px}
+  .stat-card{padding:12px 13px}
+  .stat-card .top{flex-direction:column;align-items:flex-start;gap:9px;margin-bottom:9px}
+  .stat-card .lbl{font-size:11.5px}
+  .stat-card .big{font-size:21px}
+  .stat-ico{width:38px;height:38px}
+  .stat-ico>.icon3d-td{width:38px!important;height:38px!important}
+  .hero-kpi{grid-template-columns:1fr!important}
+  .kpi-hero .kv{font-size:26px}
+  .kpi-card{padding:14px}
+  .bin-grid{grid-template-columns:repeat(5,1fr);gap:6px}
+  .map-wrap{height:52vh;min-height:280px}
+  .legend{width:52%}
+  .idle-top{gap:9px}
+  .idle-id{font-size:16px}
+  .sec-title{flex-wrap:wrap}
+  .nav-btn span{font-size:9px}
+}
+
+/* ---------- LANDSCAPE / SHORT VIEWPORTS ---------- */
+@media(max-height:700px) and (max-width:820px){
+  #login{align-items:flex-start;overflow:auto}
+}
+@media(max-width:820px) and (orientation:landscape) and (max-height:520px){
+  .map-wrap{height:76vh;min-height:200px;max-height:none}
+  .drill{max-height:88vh}
+  .drill-body{max-height:calc(88vh - 92px)}
+  .modal-body{max-height:calc(100vh - 190px)}
+  .stat-card .top{flex-direction:row;align-items:center}
+}
+@media(max-width:820px){
+  #login{overflow:auto;padding:24px 16px}
+  .login-card{width:100%;max-width:400px;padding:28px 22px 24px}
+  .login-brand{margin-bottom:22px}
+  .login-brand h1{font-size:23px}
+}
+
+/* ---------- TOUCH DEVICES: no sticky hover states ---------- */
+@media(hover:none){
+  .plot-card:hover,.mach-card:hover{transform:none;box-shadow:none;border-color:var(--line)}
+  .btn-login:hover,.btn-dispatch:hover{transform:none;box-shadow:none}
+  .btn-login:hover{box-shadow:0 10px 24px rgba(37,99,235,.45),inset 0 1px 0 rgba(255,255,255,.3)}
+  .btn-dispatch:hover{box-shadow:0 6px 14px rgba(37,99,235,.35),inset 0 1px 0 rgba(255,255,255,.3)}
+  .bin:hover{transform:none}
+  .map-marker:hover{filter:none}
+  tr:hover td{background:transparent}
+  .plot-card:active,.mach-card:active,.fifo-card:active{background:#F5F8FD}
+  .bin:active{transform:scale(.94)}
+  .nav-btn:active{background:rgba(255,255,255,.12)}
+}
 </style>
 </head>
 <body>
@@ -400,7 +561,7 @@ tr:hover td{background:#F9FBFE}
         <div class="pg-sub" id="pgSub">ภาพรวมเครื่องจักรและแปลงอ้อยแบบเรียลไทม์</div>
       </div>
       <div class="grow"></div>
-      <div class="live-pill"><span class="live-dot"></span> LIVE · อัปเดตทุก 5 วินาที</div>
+      <div class="live-pill" title="LIVE · อัปเดตทุก 5 วินาที"><span class="live-dot"></span><span class="lp-txt"> LIVE · อัปเดตทุก 5 วินาที</span></div>
       <div class="clock num" id="clock">--:--:--</div>
     </div>
 
@@ -696,13 +857,87 @@ function p1Tab(el,which){
   document.getElementById('side-area').style.display=which==='area'?'block':'none';
   document.getElementById('side-equip').style.display=which==='equip'?'block':'none';
 }
-let mapScale=1;
+let mapScale=1,mapX=0,mapY=0;
+const MAP_MAX=3;
+function applyMap(){
+  const wrap=document.getElementById('mapWrap');
+  if(!wrap)return;
+  // keep the panned image inside the frame
+  const mx=wrap.clientWidth*(mapScale-1)/2, my=wrap.clientHeight*(mapScale-1)/2;
+  mapX=Math.max(-mx,Math.min(mx,mapX));
+  mapY=Math.max(-my,Math.min(my,mapY));
+  const t=`translate(${mapX}px,${mapY}px) scale(${mapScale})`;
+  [document.getElementById('mapSvg'),document.getElementById('markerG')].forEach(el=>{
+    if(!el)return;
+    el.style.transformOrigin='center center';
+    el.style.transform=t;
+  });
+  // when zoomed out, let the page scroll through the map instead of trapping the gesture
+  wrap.style.touchAction = mapScale>1 ? 'none' : 'pan-y';
+  wrap.style.cursor = mapScale>1 ? 'grab' : '';
+}
 function mapZoom(d){
-  if(d===0)mapScale=1; else mapScale=Math.min(2.2,Math.max(1,mapScale+d*.25));
-  document.getElementById('mapSvg').style.transform=`scale(${mapScale})`;
-  document.getElementById('markerG').style.transform=`scale(${mapScale})`;
-  document.getElementById('mapSvg').style.transformOrigin='center';
-  document.getElementById('markerG').style.transformOrigin='center';
+  if(d===0){mapScale=1;mapX=0;mapY=0}
+  else{
+    const ns=Math.min(MAP_MAX,Math.max(1,mapScale+d*.25));
+    if(mapScale>0){mapX*=ns/mapScale;mapY*=ns/mapScale}
+    mapScale=ns;
+  }
+  applyMap();
+}
+function initMapGestures(){
+  const wrap=document.getElementById('mapWrap');
+  if(!wrap||wrap.dataset.gestures)return;
+  wrap.dataset.gestures='1';
+  const dist=t=>Math.hypot(t[0].clientX-t[1].clientX,t[0].clientY-t[1].clientY);
+  let mode=0,sx=0,sy=0,ox=0,oy=0,startDist=0,startScale=1,moved=false;
+
+  wrap.addEventListener('touchstart',e=>{
+    if(e.target.closest('.map-ctrl,.legend,.drill'))return;
+    if(e.touches.length===2){
+      mode=2;startDist=dist(e.touches);startScale=mapScale;e.preventDefault();
+    }else if(e.touches.length===1&&mapScale>1){
+      mode=1;moved=false;
+      sx=e.touches[0].clientX;sy=e.touches[0].clientY;ox=mapX;oy=mapY;
+    }else mode=0;
+  },{passive:false});
+
+  wrap.addEventListener('touchmove',e=>{
+    if(mode===2&&e.touches.length===2){
+      e.preventDefault();
+      mapScale=Math.min(MAP_MAX,Math.max(1,startScale*dist(e.touches)/(startDist||1)));
+      applyMap();
+    }else if(mode===1&&e.touches.length===1){
+      e.preventDefault();
+      mapX=ox+(e.touches[0].clientX-sx);
+      mapY=oy+(e.touches[0].clientY-sy);
+      moved=true;applyMap();
+    }
+  },{passive:false});
+
+  wrap.addEventListener('touchend',e=>{
+    // a pan shouldn't also fire the marker's click handler
+    if(mode===1&&moved)e.preventDefault();
+    if(e.touches.length===0)mode=0;
+  },{passive:false});
+
+  // desktop drag-to-pan once zoomed in
+  wrap.addEventListener('mousedown',e=>{
+    if(mapScale<=1||e.button!==0||e.target.closest('.map-ctrl,.legend,.drill'))return;
+    e.preventDefault();
+    const dx=e.clientX,dy=e.clientY,bx=mapX,by=mapY;
+    wrap.style.cursor='grabbing';
+    const mv=ev=>{mapX=bx+ev.clientX-dx;mapY=by+ev.clientY-dy;applyMap()};
+    const up=()=>{
+      document.removeEventListener('mousemove',mv);
+      document.removeEventListener('mouseup',up);
+      wrap.style.cursor=mapScale>1?'grab':'';
+    };
+    document.addEventListener('mousemove',mv);
+    document.addEventListener('mouseup',up);
+  });
+
+  window.addEventListener('resize',applyMap);
 }
 function openPlot(code){
   const p=PLOTS.find(x=>x.code===code);if(!p)return;
@@ -1076,9 +1311,9 @@ function buildP4(){
       <div class="tbl-head"><div class="tt">ผลผลิตรายคัน</div>
         <div class="seg" style="margin-left:auto">${['ทั้งหมด','รถตัดอ้อย','หัวลากไร่ (น้ำมัน)','หัวลากไร่ (EV)','หัวลากหน้าลาน'].map((x,i)=>`<button class="${i===0?'active':''}" onclick="filterTbl(this,'${x}')">${x}</button>`).join('')}</div>
       </div>
-      <table><thead><tr>
+      <div class="tbl-scroll"><table><thead><tr>
         <th>เครื่องจักร</th><th>ประเภท</th><th>ตันอ้อย / เป้าหมาย</th><th style="min-width:170px">% สำเร็จ</th><th>ระยะทาง</th><th>จำนวนงาน</th>
-      </tr></thead><tbody id="p4body">${rows}</tbody></table>
+      </tr></thead><tbody id="p4body">${rows}</tbody></table></div>
     </div>`;
 }
 function segPick(el){el.parentNode.querySelectorAll('button').forEach(b=>b.classList.remove('active'));el.classList.add('active')}
@@ -1096,6 +1331,7 @@ function filterTbl(el,type){
 
 /* ============ INIT ============ */
 buildP1();buildP2();buildP3();buildP4();
+initMapGestures();
 </script>
 </body>
 </html>
